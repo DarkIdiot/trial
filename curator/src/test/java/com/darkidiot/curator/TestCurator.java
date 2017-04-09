@@ -1,18 +1,1 @@
-package com.darkidiot.curator;
-
-import org.junit.Test;
-import static com.darkidiot.curator.Constant.*;
-/**
- * Copyright (c) for darkidiot
- * Date:2017/4/10
- * Author: <a href="darkidiot@icloud.com">darkidiot</a>
- * School: CUIT
- * Desc:
- */
-public class TestCurator {
-
-    @Test
-    public void testConnect() {
-
-    }
-}
+package com.darkidiot.curator;import lombok.extern.slf4j.Slf4j;import org.apache.curator.RetryPolicy;import org.apache.curator.framework.CuratorFramework;import org.apache.curator.framework.CuratorFrameworkFactory;import org.apache.curator.retry.ExponentialBackoffRetry;import org.apache.curator.retry.RetryUntilElapsed;import org.apache.curator.shaded.com.google.common.base.Throwables;import org.apache.zookeeper.CreateMode;import org.junit.Test;import static com.darkidiot.curator.Constant.getConnetInfo;/** * Copyright (c) for darkidiot * Date:2017/4/10 * Author: <a href="darkidiot@icloud.com">darkidiot</a> * School: CUIT * Desc: */@Slf4jpublic class TestCurator {    @Test    public void testConnect() {        RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);        CuratorFramework client = CuratorFrameworkFactory.newClient(getConnetInfo(), 5000, 5000, retryPolicy);    }    @Test    public void testFluentConnect() {        RetryPolicy retryPolicy = new RetryUntilElapsed(5, 1000);        CuratorFramework client = CuratorFrameworkFactory.builder()                .connectString(getConnetInfo())                .sessionTimeoutMs(5000)                .connectionTimeoutMs(5000)                .retryPolicy(retryPolicy)                .build();        try {            client.create().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath("/darkidiot","joe".getBytes());        } catch (Exception e) {            Throwables.getStackTraceAsString(e);        }    }}
