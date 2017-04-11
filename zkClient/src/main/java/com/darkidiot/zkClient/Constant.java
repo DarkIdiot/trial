@@ -8,7 +8,8 @@ package com.darkidiot.zkClient;
  * Desc:
  */
 abstract class Constant {
-    private final static String ip = "192.168.2.114";
+//    private final static String ip = "192.168.2.114";
+    private final static String ip = "localhost";
     private final static String port = "2181";
     private final static String splitter = ":";
 
