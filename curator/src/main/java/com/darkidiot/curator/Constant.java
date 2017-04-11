@@ -8,7 +8,8 @@ package com.darkidiot.curator;
  * Desc:
  */
 public abstract class Constant {
-    final static String ip = "192.168.2.14";
+//    final static String ip = "192.168.2.14";
+    final static String ip = "127.0.0.1";
     final static String port = "2181";
     final static String splitter = ":";
     static String getConnetInfo() {
