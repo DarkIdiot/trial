@@ -1,4 +1,4 @@
-package com.darkidiot.curator;
+package com.darkidiot.zkClient;
 
 /**
  * Copyright (c) for darkidiot
