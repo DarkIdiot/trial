@@ -27,7 +27,7 @@ public class TestZkClient {
         ZkClient client = new ZkClient(getConnectInfo(), 5000, 5000, new SerializableSerializer());
         log.info("connect ok...");
         UserDto user = new UserDto("idiot", "dark", "man", "java developer", "programming");
-        String path = client.create("/root-node", user, CreateMode.EPHEMERAL);
+        String path = client.create("/root-node", user, CreateMode.PERSISTENT);
         log.info("create node: {}", path);
     }
 
