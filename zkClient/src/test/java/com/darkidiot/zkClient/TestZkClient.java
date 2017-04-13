@@ -1,5 +1,6 @@
 package com.darkidiot.zkClient;
 
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.serialize.SerializableSerializer;
@@ -38,7 +39,7 @@ public class TestZkClient {
         Stat stat = new Stat();
         UserDto user = client.readData("/root-node", stat);
         log.info("get node data: {}", user.toString());
-        log.info("get stat: {}", stat.toString());
+        log.info("stat:{}",new Gson().toJson(stat));
     }
 
     @Test
