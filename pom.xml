@@ -11,6 +11,7 @@
     <modules>
         <module>curator</module>
         <module>zkClient</module>
+        <module>mongo</module>
     </modules>
     <dependencies>
         <dependency>
