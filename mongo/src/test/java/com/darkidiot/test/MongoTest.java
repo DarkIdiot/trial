@@ -35,13 +35,13 @@ public class MongoTest {
     @BeforeClass
     public static void setUp() {
         // 连接到 mongodb 服务
-        ServerAddress serverAddress = new ServerAddress("127.0.0.1", 27017);
-//        MongoCredential mongoCredential = MongoCredential.createMongoCRCredential("admin", "newxcloud", "Mongo@2015".toCharArray());
+//        ServerAddress serverAddress = new ServerAddress("127.0.0.1", 27017);
+//        MongoCredential mongoCredential = MongoCredential.createMongoCRCredential("admin", "test", "Mongo@2015".toCharArray());
 
 //        MongoClient mongoClient = new MongoClient(serverAddress, Lists.newArrayList(mongoCredential));
         MongoClient mongoClient = new MongoClient("127.0.0.1", 27017);
         // 连接到数据库
-        mongoDatabase = mongoClient.getDatabase("newxcloud");
+        mongoDatabase = mongoClient.getDatabase("test");
         log.info("connect to database successfully");
     }
 

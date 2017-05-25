@@ -1,7 +1,10 @@
 package com.darkidiot.mongo.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
 
 /**
  * Copyright (c) for darkidiot
@@ -11,9 +14,16 @@ import org.bson.types.ObjectId;
  * Desc:
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
-    private ObjectId objectId;
-    private String firstName;
-    private String lastName;
+    @Id
+    private Integer objectId;
+    private String name;
     private Integer age;
+
+    public User(String name, Integer age) {
+        this.name = name;
+        this.age = age;
+    }
 }
