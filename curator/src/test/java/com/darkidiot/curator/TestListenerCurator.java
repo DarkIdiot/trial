@@ -39,6 +39,7 @@ public class TestListenerCurator {
         final NodeCache nodeCache = new NodeCache(client, "/darkidiot");
         nodeCache.start();
         nodeCache.getListenable().addListener(new NodeCacheListener() {
+            @Override
             public void nodeChanged() throws Exception {
                 ChildData currentData = nodeCache.getCurrentData();
                 byte[] data = currentData.getData();
@@ -68,6 +69,8 @@ public class TestListenerCurator {
         PathChildrenCache pathChildrenCache = new PathChildrenCache(client, "/darkidiot", true);
         pathChildrenCache.start();
         pathChildrenCache.getListenable().addListener(new PathChildrenCacheListener() {
+
+            @Override
             public void childEvent(CuratorFramework client, PathChildrenCacheEvent event) throws Exception {
                 switch (event.getType()) {
                     case CHILD_ADDED:
