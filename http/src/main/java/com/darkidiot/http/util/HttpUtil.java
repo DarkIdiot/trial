@@ -1,8 +1,7 @@
 package com.darkidiot.http.util;
 
-import com.aliyun.api.gateway.demo.Response;
-import com.darkidiot.http.constant.HttpMethod;
-import org.apache.commons.lang.StringUtils;
+import com.darkidiot.http.constant.*;
+import com.darkidiot.http.model.Response;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -90,7 +89,7 @@ public class HttpUtil {
     public static Response httpPost(String host, String path, int connectTimeout, Map<String, String> headers, Map<String, String> querys, Map<String, String> bodys, List<String> signHeaderPrefixList, String appKey, String appSecret)
             throws Exception {
         if (headers == null) {
-            headers = new HashMap<String, String>();
+            headers = new HashMap<>();
         }
 
         headers.put(HttpHeader.HTTP_HEADER_CONTENT_TYPE, ContentType.CONTENT_TYPE_FORM);
@@ -139,7 +138,7 @@ public class HttpUtil {
             post.addHeader(e.getKey(), MessageDigestUtil.utf8ToIso88591(e.getValue()));
         }
 
-        if (StringUtils.isNotBlank(body)) {
+        if (StringUtil.isNotBlank(body)) {
             post.setEntity(new StringEntity(body, Constants.ENCODING));
 
         }
@@ -206,7 +205,7 @@ public class HttpUtil {
             put.addHeader(e.getKey(), MessageDigestUtil.utf8ToIso88591(e.getValue()));
         }
 
-        if (StringUtils.isNotBlank(body)) {
+        if (StringUtil.isNotBlank(body)) {
             put.setEntity(new StringEntity(body, Constants.ENCODING));
 
         }
@@ -301,7 +300,7 @@ public class HttpUtil {
     private static String initUrl(String host, String path, Map<String, String> querys) throws UnsupportedEncodingException {
     	StringBuilder sbUrl = new StringBuilder();
     	sbUrl.append(host);
-    	if (!StringUtils.isBlank(path)) {
+    	if (!StringUtil.isBlank(path)) {
     		sbUrl.append(path);
         }
     	if (null != querys) {
@@ -310,12 +309,12 @@ public class HttpUtil {
         		if (0 < sbQuery.length()) {
         			sbQuery.append(Constants.SPE3);
         		}
-        		if (StringUtils.isBlank(query.getKey()) && !StringUtils.isBlank(query.getValue())) {
+        		if (StringUtil.isBlank(query.getKey()) && !StringUtil.isBlank(query.getValue())) {
         			sbQuery.append(query.getValue());
                 }
-        		if (!StringUtils.isBlank(query.getKey())) {
+        		if (!StringUtil.isBlank(query.getKey())) {
         			sbQuery.append(query.getKey());
-        			if (!StringUtils.isBlank(query.getValue())) {
+        			if (!StringUtil.isBlank(query.getValue())) {
         				sbQuery.append(Constants.SPE4);
         				sbQuery.append(URLEncoder.encode(query.getValue(), Constants.ENCODING));
         			}        			
@@ -351,7 +350,7 @@ public class HttpUtil {
                                                           String appKey, String appSecret)
             throws MalformedURLException {
         if (headers == null) {
-            headers = new HashMap<String, String>();
+            headers = new HashMap<>();
         }
 
         headers.put(SystemHeader.X_CA_TIMESTAMP, String.valueOf(new Date().getTime()));

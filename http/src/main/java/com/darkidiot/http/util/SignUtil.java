@@ -2,14 +2,11 @@ package com.darkidiot.http.util;
 
 import com.darkidiot.http.constant.Constants;
 import com.darkidiot.http.constant.HttpHeader;
-import org.apache.commons.codec.binary.Base64;
+import com.darkidiot.http.constant.SystemHeader;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * 签名工具
@@ -38,7 +35,7 @@ public class SignUtil {
             byte[] keyBytes = secret.getBytes(Constants.ENCODING);
             hmacSha256.init(new SecretKeySpec(keyBytes, 0, keyBytes.length, Constants.HMAC_SHA256));
 
-            return new String(Base64.encodeBase64(
+            return new String(Base64.getEncoder().encode(
                     hmacSha256.doFinal(buildStringToSign(method, path, headers, querys, bodys, signHeaderPrefixList)
                             .getBytes(Constants.ENCODING))),
                     Constants.ENCODING);
@@ -101,13 +98,13 @@ public class SignUtil {
     private static String buildResource(String path, Map<String, String> querys, Map<String, String> bodys) {
         StringBuilder sb = new StringBuilder();
 
-        if (!StringUtils.isBlank(path)) {
+        if (!StringUtil.isBlank(path)) {
             sb.append(path);
         }
-        Map<String, String> sortMap = new TreeMap<String, String>();
+        Map<String, String> sortMap = new TreeMap<>();
         if (null != querys) {
             for (Map.Entry<String, String> query : querys.entrySet()) {
-                if (!StringUtils.isBlank(query.getKey())) {
+                if (!StringUtil.isBlank(query.getKey())) {
                     sortMap.put(query.getKey(), query.getValue());
                 }
             }
@@ -115,7 +112,7 @@ public class SignUtil {
 
         if (null != bodys) {
             for (Map.Entry<String, String> body : bodys.entrySet()) {
-                if (!StringUtils.isBlank(body.getKey())) {
+                if (!StringUtil.isBlank(body.getKey())) {
                     sortMap.put(body.getKey(), body.getValue());
                 }
             }
@@ -123,12 +120,12 @@ public class SignUtil {
 
         StringBuilder sbParam = new StringBuilder();
         for (Map.Entry<String, String> item : sortMap.entrySet()) {
-            if (!StringUtils.isBlank(item.getKey())) {
+            if (!StringUtil.isBlank(item.getKey())) {
                 if (0 < sbParam.length()) {
                     sbParam.append(Constants.SPE3);
                 }
                 sbParam.append(item.getKey());
-                if (!StringUtils.isBlank(item.getValue())) {
+                if (!StringUtil.isBlank(item.getValue())) {
                     sbParam.append(Constants.SPE4).append(item.getValue());
                 }
             }
@@ -159,14 +156,14 @@ public class SignUtil {
             signHeaderPrefixList.remove(HttpHeader.HTTP_HEADER_DATE);
             Collections.sort(signHeaderPrefixList);
             if (null != headers) {
-                Map<String, String> sortMap = new TreeMap<String, String>();
+                Map<String, String> sortMap = new TreeMap<>();
                 sortMap.putAll(headers);
                 StringBuilder signHeadersStringBuilder = new StringBuilder();
                 for (Map.Entry<String, String> header : sortMap.entrySet()) {
                     if (isHeaderToSign(header.getKey(), signHeaderPrefixList)) {
                         sb.append(header.getKey());
                         sb.append(Constants.SPE2);
-                        if (!StringUtils.isBlank(header.getValue())) {
+                        if (!StringUtil.isBlank(header.getValue())) {
                             sb.append(header.getValue());
                         }
                         sb.append(Constants.LF);
@@ -187,7 +184,7 @@ public class SignUtil {
      * Http头是否参与签名 return
      */
     private static boolean isHeaderToSign(String headerName, List<String> signHeaderPrefixList) {
-        if (StringUtils.isBlank(headerName)) {
+        if (StringUtil.isBlank(headerName)) {
             return false;
         }
 
@@ -205,4 +202,6 @@ public class SignUtil {
 
         return false;
     }
+
+
 }
