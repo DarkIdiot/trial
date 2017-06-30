@@ -26,7 +26,7 @@ public class HttpTest {
     // APP密钥
     private final static String APP_SECRET = "7f1cadd346f633ae013c572a71b39123";
     //API域名
-    private final static String HOST = "ali-weather.showapi.com/area-to-weather";
+    private final static String HOST = "ali-weather.showapi.com";
     //自定义参与签名Header前缀（可选,默认只有"X-Ca-"开头的参与到Header签名）
     private final static List<String> CUSTOM_HEADERS_TO_SIGN_PREFIX = new ArrayList<String>();
 
@@ -39,33 +39,6 @@ public class HttpTest {
      */
     @Test
     public void get() throws Exception {
-        //请求path
-        String path = "/area-to-weather";
-
-        Map<String, String> headers = new HashMap<>();
-        //（必填）根据期望的Response内容类型设置
-        headers.put(HttpHeader.HTTP_HEADER_ACCEPT, "application/json");
-        headers.put("a-header1", "header1Value");
-        headers.put("b-header2", "header2Value");
-
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.clear();
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.add("a-header1");
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.add("a-header2");
-
-        Request request = new Request(Method.GET, HttpSchema.HTTPS + HOST, path, APP_KEY, APP_SECRET, Constants.DEFAULT_TIMEOUT);
-        request.setHeaders(headers);
-        request.setSignHeaderPrefixList(CUSTOM_HEADERS_TO_SIGN_PREFIX);
-
-        //请求的query
-        Map<String, String> querys = new HashMap<String, String>();
-        querys.put("a-query1", "query1Value");
-        querys.put("b-query2", "query2Value");
-        request.setQuerys(querys);
-
-        //调用服务端
-        Response response = Client.execute(request);
-
-        System.out.println(gson.toJson(response));
     }
 
     /**
@@ -75,37 +48,6 @@ public class HttpTest {
      */
     @Test
     public void postForm() throws Exception {
-        //请求path
-        String path = "/postform";
-
-        Map<String, String> headers = new HashMap<String, String>();
-        //（必填）根据期望的Response内容类型设置
-        headers.put(HttpHeader.HTTP_HEADER_ACCEPT, "application/json");
-        headers.put("a-header1", "header1Value");
-        headers.put("b-header2", "header2Value");
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.clear();
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.add("a-header1");
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.add("a-header2");
-
-        Request request = new Request(Method.POST_FORM, HttpSchema.HTTP + HOST, path, APP_KEY, APP_SECRET, Constants.DEFAULT_TIMEOUT);
-        request.setHeaders(headers);
-        request.setSignHeaderPrefixList(CUSTOM_HEADERS_TO_SIGN_PREFIX);
-
-        //请求的query
-        Map<String, String> querys = new HashMap<String, String>();
-        querys.put("a-query1", "query1Value");
-        querys.put("b-query2", "query2Value");
-        request.setQuerys(querys);
-
-        Map<String, String> bodys = new HashMap<String, String>();
-        bodys.put("a-body1", "body1Value");
-        bodys.put("b-body2", "body2Value");
-        request.setBodys(bodys);
-
-        //调用服务端
-        Response response = Client.execute(request);
-
-        System.out.println(gson.toJson(response));
     }
 
     /**
@@ -115,42 +57,6 @@ public class HttpTest {
      */
     @Test
     public void postString() throws Exception {
-        //请求path
-        String path = "/poststring";
-        //Body内容
-        String body = "demo string body content";
-
-        Map<String, String> headers = new HashMap<String, String>();
-        //（必填）根据期望的Response内容类型设置
-        headers.put(HttpHeader.HTTP_HEADER_ACCEPT, "application/json");
-        //（可选）Body MD5,服务端会校验Body内容是否被篡改,建议Body非Form表单时添加此Header
-        headers.put(HttpHeader.HTTP_HEADER_CONTENT_MD5, MessageDigestUtil.base64AndMD5(body));
-        //（POST/PUT请求必选）请求Body内容格式
-        headers.put(HttpHeader.HTTP_HEADER_CONTENT_TYPE, ContentType.CONTENT_TYPE_TEXT);
-
-        headers.put("a-header1", "header1Value");
-        headers.put("b-header2", "header2Value");
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.clear();
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.add("a-header1");
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.add("a-header2");
-
-
-        Request request = new Request(Method.POST_STRING, HttpSchema.HTTP + HOST, path, APP_KEY, APP_SECRET, Constants.DEFAULT_TIMEOUT);
-        request.setHeaders(headers);
-        request.setSignHeaderPrefixList(CUSTOM_HEADERS_TO_SIGN_PREFIX);
-
-        //请求的query
-        Map<String, String> querys = new HashMap<String, String>();
-        querys.put("a-query1", "query1Value");
-        querys.put("b-query2", "query2Value");
-        request.setQuerys(querys);
-
-        request.setStringBody(body);
-
-        //调用服务端
-        Response response = Client.execute(request);
-
-        System.out.println(gson.toJson(response));
     }
 
     /**
@@ -160,41 +66,6 @@ public class HttpTest {
      */
     @Test
     public void postBytes() throws Exception {
-        //请求path
-        String path = "/poststream";
-        //Body内容
-        byte[] bytesBody = "demo bytes body content".getBytes(Constants.ENCODING);
-
-        Map<String, String> headers = new HashMap<String, String>();
-        //（必填）根据期望的Response内容类型设置
-        headers.put(HttpHeader.HTTP_HEADER_ACCEPT, "application/json");
-        //（可选）Body MD5,服务端会校验Body内容是否被篡改,建议Body非Form表单时添加此Header
-        headers.put(HttpHeader.HTTP_HEADER_CONTENT_MD5, MessageDigestUtil.base64AndMD5(bytesBody));
-        //（POST/PUT请求必选）请求Body内容格式
-        headers.put(HttpHeader.HTTP_HEADER_CONTENT_TYPE, ContentType.CONTENT_TYPE_TEXT);
-
-        headers.put("a-header1", "header1Value");
-        headers.put("b-header2", "header2Value");
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.clear();
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.add("a-header1");
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.add("a-header2");
-
-        Request request = new Request(Method.POST_BYTES, HttpSchema.HTTP + HOST, path, APP_KEY, APP_SECRET, Constants.DEFAULT_TIMEOUT);
-        request.setHeaders(headers);
-        request.setSignHeaderPrefixList(CUSTOM_HEADERS_TO_SIGN_PREFIX);
-
-        //请求的query
-        Map<String, String> querys = new HashMap<String, String>();
-        querys.put("a-query1", "query1Value");
-        querys.put("b-query2", "query2Value");
-        request.setQuerys(querys);
-
-        request.setBytesBody(bytesBody);
-
-        //调用服务端
-        Response response = Client.execute(request);
-
-        System.out.println(gson.toJson(response));
     }
 
     /**
@@ -204,34 +75,6 @@ public class HttpTest {
      */
     @Test
     public void putString() throws Exception {
-        //请求path
-        String path = "/putstring";
-        //Body内容
-        String body = "demo string body content";
-
-        Map<String, String> headers = new HashMap<String, String>();
-        //（必填）根据期望的Response内容类型设置
-        headers.put(HttpHeader.HTTP_HEADER_ACCEPT, "application/json");
-        //（可选）Body MD5,服务端会校验Body内容是否被篡改,建议Body非Form表单时添加此Header
-        headers.put(HttpHeader.HTTP_HEADER_CONTENT_MD5, MessageDigestUtil.base64AndMD5(body));
-        //（POST/PUT请求必选）请求Body内容格式
-        headers.put(HttpHeader.HTTP_HEADER_CONTENT_TYPE, ContentType.CONTENT_TYPE_TEXT);
-
-        headers.put("a-header1", "header1Value");
-        headers.put("b-header2", "header2Value");
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.clear();
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.add("a-header1");
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.add("a-header2");
-
-        Request request = new Request(Method.POST_STRING, HttpSchema.HTTP + HOST, path, APP_KEY, APP_SECRET, Constants.DEFAULT_TIMEOUT);
-        request.setHeaders(headers);
-        request.setSignHeaderPrefixList(CUSTOM_HEADERS_TO_SIGN_PREFIX);
-        request.setStringBody(body);
-
-        //调用服务端
-        Response response = Client.execute(request);
-
-        System.out.println(gson.toJson(response));
     }
 
     /**
@@ -241,33 +84,6 @@ public class HttpTest {
      */
     @Test
     public void putBytesBody() throws Exception {
-        //请求path
-        String path = "/putstream";
-        //Body内容
-        byte[] bytesBody = "demo bytes body content".getBytes(Constants.ENCODING);
-
-        Map<String, String> headers = new HashMap<String, String>();
-        //（必填）根据期望的Response内容类型设置
-        headers.put(HttpHeader.HTTP_HEADER_ACCEPT, "application/json");
-        //（可选）Body MD5,服务端会校验Body内容是否被篡改,建议Body非Form表单时添加此Header
-        headers.put(HttpHeader.HTTP_HEADER_CONTENT_MD5, MessageDigestUtil.base64AndMD5(bytesBody));
-        //（POST/PUT请求必选）请求Body内容格式
-        headers.put(HttpHeader.HTTP_HEADER_CONTENT_TYPE, ContentType.CONTENT_TYPE_TEXT);
-        headers.put("a-header1", "header1Value");
-        headers.put("b-header2", "header2Value");
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.clear();
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.add("a-header1");
-        CUSTOM_HEADERS_TO_SIGN_PREFIX.add("a-header2");
-
-        Request request = new Request(Method.PUT_BYTES, HttpSchema.HTTP + HOST, path, APP_KEY, APP_SECRET, Constants.DEFAULT_TIMEOUT);
-        request.setHeaders(headers);
-        request.setSignHeaderPrefixList(CUSTOM_HEADERS_TO_SIGN_PREFIX);
-        request.setBytesBody(bytesBody);
-
-        //调用服务端
-        Response response = Client.execute(request);
-
-        System.out.println(gson.toJson(response));
     }
 
     /**
@@ -277,21 +93,6 @@ public class HttpTest {
      */
     @Test
     public void delete() throws Exception {
-        //请求path
-        String path = "/delete";
-
-        Map<String, String> headers = new HashMap<String, String>();
-        //（必填）根据期望的Response内容类型设置
-        headers.put(HttpHeader.HTTP_HEADER_ACCEPT, "application/json");
-
-        Request request = new Request(Method.DELETE, HttpSchema.HTTP + HOST, path, APP_KEY, APP_SECRET, Constants.DEFAULT_TIMEOUT);
-        request.setHeaders(headers);
-        request.setSignHeaderPrefixList(CUSTOM_HEADERS_TO_SIGN_PREFIX);
-
-        //调用服务端
-        Response response = Client.execute(request);
-
-        System.out.println(gson.toJson(response));
     }
 
 }

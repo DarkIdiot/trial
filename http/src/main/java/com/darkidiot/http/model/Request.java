@@ -2,6 +2,8 @@ package com.darkidiot.http.model;
 
 
 import com.darkidiot.http.constant.Method;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
@@ -9,15 +11,14 @@ import java.util.Map;
 /**
  * Request
  */
+@Data
+@NoArgsConstructor
 public class Request {
-
-    public Request() {
-    }
 
     public Request(Method method, String host, String path, String appKey, String appSecret, int timeout) {
         this.method = method;
         this.host = host;
-        this.path = path;        
+        this.path = path;
         this.appKey = appKey;
         this.appSecret = appSecret;
         this.timeout = timeout;
@@ -32,7 +33,7 @@ public class Request {
      * （必选）Host
      */
     private String host;
-    
+
     /**
      * （必选）Path
      */
@@ -57,7 +58,7 @@ public class Request {
      * （可选） HTTP头
      */
     private Map<String, String> headers;
-    
+
     /**
      * （可选） Querys
      */
@@ -83,99 +84,4 @@ public class Request {
      */
     private List<String> signHeaderPrefixList;
 
-    public Method getMethod() {
-        return method;
-    }
-
-    public void setMethod(Method method) {
-        this.method = method;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-    
-    public String getPath() {
-        return path;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public String getAppKey() {
-        return appKey;
-    }
-
-    public void setAppKey(String appKey) {
-        this.appKey = appKey;
-    }
-
-    public String getAppSecret() {
-        return appSecret;
-    }
-
-    public void setAppSecret(String appSecret) {
-        this.appSecret = appSecret;
-    }
-
-    public int getTimeout() {
-        return timeout;
-    }
-
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
-    }
-
-    public Map<String, String> getHeaders() {
-        return headers;
-    }
-
-    public void setHeaders(Map<String, String> headers) {
-        this.headers = headers;
-    }
-    
-    public Map<String, String> getQuerys() {
-        return querys;
-    }
-
-    public void setQuerys(Map<String, String> querys) {
-        this.querys = querys;
-    }
-    
-    public Map<String, String> getBodys() {
-        return bodys;
-    }
-
-    public void setBodys(Map<String, String> bodys) {
-        this.bodys = bodys;
-    }
-
-    public String getStringBody() {
-        return stringBody;
-    }
-
-    public void setStringBody(String stringBody) {
-        this.stringBody = stringBody;
-    }
-
-    public byte[] getBytesBody() {
-        return bytesBody;
-    }
-
-    public void setBytesBody(byte[] bytesBody) {
-        this.bytesBody = bytesBody;
-    }
-
-    public List<String> getSignHeaderPrefixList() {
-        return signHeaderPrefixList;
-    }
-
-    public void setSignHeaderPrefixList(List<String> signHeaderPrefixList) {
-        this.signHeaderPrefixList = signHeaderPrefixList;
-    }
 }

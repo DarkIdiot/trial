@@ -6,8 +6,10 @@ import com.darkidiot.http.model.Request;
 import com.darkidiot.http.model.Response;
 import com.darkidiot.http.util.MessageDigestUtil;
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
+import javax.crypto.Mac;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,15 +21,17 @@ import java.util.Map;
  * Author: 2016年 <a href="heqiao2@gome.com.cn">darkidiot</a>
  * Desc:
  */
+@Slf4j
 public class HttpsTest {
     //APP KEY
-    private final static String APP_KEY = "app_key";
+    private final static String APP_KEY = "23557637";
     // APP密钥
-    private final static String APP_SECRET = "APP_SECRET";
+    private final static String APP_SECRET = "7f1cadd346f633ae013c572a71b39123";
     //API域名
-    private final static String HOST = "api.aaaa.com";
+    private final static String HOST = "ali-weather.showapi.com";
     //自定义参与签名Header前缀（可选,默认只有"X-Ca-"开头的参与到Header签名）
-    private final static List<String> CUSTOM_HEADERS_TO_SIGN_PREFIX = new ArrayList<String>();
+    private final static List<String> CUSTOM_HEADERS_TO_SIGN_PREFIX = new ArrayList<>();
+
     private final static Gson gson = new Gson();
     /**
      * HTTP GET
@@ -37,9 +41,9 @@ public class HttpsTest {
     @Test
     public void get() throws Exception {
         //请求path
-        String path = "/get";
+        String path = "/area-to-weather";
 
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
         //（必填）根据期望的Response内容类型设置
         headers.put(HttpHeader.HTTP_HEADER_ACCEPT, "application/json");
         headers.put("a-header1", "header1Value");
@@ -54,15 +58,16 @@ public class HttpsTest {
         request.setSignHeaderPrefixList(CUSTOM_HEADERS_TO_SIGN_PREFIX);
 
         //请求的query
-        Map<String, String> querys = new HashMap<String, String>();
+        Map<String, String> querys = new HashMap<>();
         querys.put("a-query1", "query1Value");
         querys.put("b-query2", "query2Value");
+        querys.put("areaid", "101291401");
         request.setQuerys(querys);
 
         //调用服务端
         Response response = Client.execute(request);
 
-        System.out.println(gson.toJson(response));
+        log.info(gson.toJson(response));
     }
 
     /**
@@ -75,7 +80,7 @@ public class HttpsTest {
         //请求path
         String path = "/postform";
 
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
         //（必填）根据期望的Response内容类型设置
         headers.put(HttpHeader.HTTP_HEADER_ACCEPT, "application/json");
         headers.put("a-header1", "header1Value");
@@ -89,12 +94,12 @@ public class HttpsTest {
         request.setSignHeaderPrefixList(CUSTOM_HEADERS_TO_SIGN_PREFIX);
 
         //请求的query
-        Map<String, String> querys = new HashMap<String, String>();
+        Map<String, String> querys = new HashMap<>();
         querys.put("a-query1", "query1Value");
         querys.put("b-query2", "query2Value");
         request.setQuerys(querys);
 
-        Map<String, String> bodys = new HashMap<String, String>();
+        Map<String, String> bodys = new HashMap<>();
         bodys.put("a-body1", "body1Value");
         bodys.put("b-body2", "body2Value");
         request.setBodys(bodys);
@@ -102,7 +107,7 @@ public class HttpsTest {
         //调用服务端
         Response response = Client.execute(request);
 
-        System.out.println(gson.toJson(response));
+        log.info(gson.toJson(response));
     }
 
     /**
@@ -117,7 +122,7 @@ public class HttpsTest {
         //Body内容
         String body = "demo string body content";
 
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
         //（必填）根据期望的Response内容类型设置
         headers.put(HttpHeader.HTTP_HEADER_ACCEPT, "application/json");
         //（可选）Body MD5,服务端会校验Body内容是否被篡改,建议Body非Form表单时添加此Header
@@ -137,7 +142,7 @@ public class HttpsTest {
         request.setSignHeaderPrefixList(CUSTOM_HEADERS_TO_SIGN_PREFIX);
 
         //请求的query
-        Map<String, String> querys = new HashMap<String, String>();
+        Map<String, String> querys = new HashMap<>();
         querys.put("a-query1", "query1Value");
         querys.put("b-query2", "query2Value");
         request.setQuerys(querys);
@@ -147,7 +152,7 @@ public class HttpsTest {
         //调用服务端
         Response response = Client.execute(request);
 
-        System.out.println(gson.toJson(response));
+        log.info(gson.toJson(response));
     }
 
     /**
@@ -162,7 +167,7 @@ public class HttpsTest {
         //Body内容
         byte[] bytesBody = "demo bytes body content".getBytes(Constants.ENCODING);
 
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
         //（必填）根据期望的Response内容类型设置
         headers.put(HttpHeader.HTTP_HEADER_ACCEPT, "application/json");
         //（可选）Body MD5,服务端会校验Body内容是否被篡改,建议Body非Form表单时添加此Header
@@ -181,7 +186,8 @@ public class HttpsTest {
         request.setSignHeaderPrefixList(CUSTOM_HEADERS_TO_SIGN_PREFIX);
 
         //请求的query
-        Map<String, String> querys = new HashMap<String, String>();
+        Map<String, String> querys;
+        querys = new HashMap<>();
         querys.put("a-query1", "query1Value");
         querys.put("b-query2", "query2Value");
         request.setQuerys(querys);
@@ -191,7 +197,7 @@ public class HttpsTest {
         //调用服务端
         Response response = Client.execute(request);
 
-        System.out.println(gson.toJson(response));
+        log.info(gson.toJson(response));
     }
 
     /**
@@ -206,7 +212,7 @@ public class HttpsTest {
         //Body内容
         String body = "demo string body content";
 
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
         //（必填）根据期望的Response内容类型设置
         headers.put(HttpHeader.HTTP_HEADER_ACCEPT, "application/json");
         //（可选）Body MD5,服务端会校验Body内容是否被篡改,建议Body非Form表单时添加此Header
@@ -228,7 +234,7 @@ public class HttpsTest {
         //调用服务端
         Response response = Client.execute(request);
 
-        System.out.println(gson.toJson(response));
+        log.info(gson.toJson(response));
     }
 
     /**
@@ -243,7 +249,7 @@ public class HttpsTest {
         //Body内容
         byte[] bytesBody = "demo bytes body content".getBytes(Constants.ENCODING);
 
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
         //（必填）根据期望的Response内容类型设置
         headers.put(HttpHeader.HTTP_HEADER_ACCEPT, "application/json");
         //（可选）Body MD5,服务端会校验Body内容是否被篡改,建议Body非Form表单时添加此Header
@@ -264,7 +270,7 @@ public class HttpsTest {
         //调用服务端
         Response response = Client.execute(request);
 
-        System.out.println(gson.toJson(response));
+        log.info(gson.toJson(response));
     }
 
     /**
@@ -277,7 +283,7 @@ public class HttpsTest {
         //请求path
         String path = "/delete";
 
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
         //（必填）根据期望的Response内容类型设置
         headers.put(HttpHeader.HTTP_HEADER_ACCEPT, "application/json");
 
@@ -288,7 +294,7 @@ public class HttpsTest {
         //调用服务端
         Response response = Client.execute(request);
 
-        System.out.println(gson.toJson(response));
+        log.info(gson.toJson(response));
     }
 
 }

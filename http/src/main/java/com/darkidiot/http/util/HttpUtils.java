@@ -29,6 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * Http工具类
+ */
 public class HttpUtils {
 
     /**
@@ -243,7 +247,8 @@ public class HttpUtils {
         return httpClient.execute(request);
     }
 
-    private static String buildUrl(String host, String path, Map<String, String> querys) throws UnsupportedEncodingException {
+    private static String buildUrl(String host, String path, Map<String, String> querys)
+            throws UnsupportedEncodingException {
         StringBuilder sbUrl = new StringBuilder();
         sbUrl.append(host);
         if (!StringUtil.isBlank(path)) {
@@ -283,7 +288,7 @@ public class HttpUtils {
         return httpClient;
     }
 
-    private static void sslClient(HttpClient httpClient) {
+    static void sslClient(HttpClient httpClient) {
         try {
             SSLContext ctx = SSLContext.getInstance("TLS");
             X509TrustManager tm = new X509TrustManager() {
@@ -292,11 +297,9 @@ public class HttpUtils {
                 }
 
                 public void checkClientTrusted(X509Certificate[] xcs, String str) {
-
                 }
 
                 public void checkServerTrusted(X509Certificate[] xcs, String str) {
-
                 }
             };
             ctx.init(null, new TrustManager[]{tm}, null);
@@ -305,9 +308,7 @@ public class HttpUtils {
             ClientConnectionManager ccm = httpClient.getConnectionManager();
             SchemeRegistry registry = ccm.getSchemeRegistry();
             registry.register(new Scheme("https", 443, ssf));
-        } catch (KeyManagementException ex) {
-            throw new RuntimeException(ex);
-        } catch (NoSuchAlgorithmException ex) {
+        } catch (KeyManagementException | NoSuchAlgorithmException ex) {
             throw new RuntimeException(ex);
         }
     }

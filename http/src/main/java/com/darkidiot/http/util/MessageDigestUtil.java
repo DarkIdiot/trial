@@ -38,8 +38,7 @@ public class MessageDigestUtil {
             md.reset();
             md.update(bytes);
 
-            final byte[] enbytes = Base64.getEncoder().encode(md.digest());
-            return new String(enbytes);
+            return new String(Base64.getEncoder().encode(md.digest()));
         } catch (final NoSuchAlgorithmException e) {
             throw new IllegalArgumentException("unknown algorithm MD5");
         }

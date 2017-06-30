@@ -11,19 +11,12 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.CoreConnectionPNames;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,17 +27,15 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.X509Certificate;
 import java.util.*;
 
 /**
- * Http工具类
+ * 阿里云天气集成--Http工具类
  */
 public class HttpUtil {
     /**
      * HTTP GET
+     *
      * @param host
      * @param path
      * @param connectTimeout
@@ -56,12 +47,16 @@ public class HttpUtil {
      * @return
      * @throws Exception
      */
-    public static Response httpGet(String host, String path, int connectTimeout, Map<String, String> headers, Map<String, String> querys, List<String> signHeaderPrefixList, String appKey, String appSecret)
+    public static Response httpGet(String host, String path, int connectTimeout,
+                                   Map<String, String> headers, Map<String, String> querys,
+                                   List<String> signHeaderPrefixList, String appKey, String appSecret)
             throws Exception {
-        headers = initialBasicHeader(HttpMethod.GET, path, headers, querys, null, signHeaderPrefixList, appKey, appSecret);
+        headers = initialBasicHeader(HttpMethod.GET, path, headers, querys, null,
+                signHeaderPrefixList, appKey, appSecret);
 
         HttpClient httpClient = wrapClient(host);
-        httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, getTimeout(connectTimeout));
+        httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,
+                getTimeout(connectTimeout));
 
         HttpGet get = new HttpGet(initUrl(host, path, querys));
 
@@ -74,6 +69,7 @@ public class HttpUtil {
 
     /**
      * HTTP POST表单
+     *
      * @param host
      * @param path
      * @param connectTimeout
@@ -86,7 +82,10 @@ public class HttpUtil {
      * @return
      * @throws Exception
      */
-    public static Response httpPost(String host, String path, int connectTimeout, Map<String, String> headers, Map<String, String> querys, Map<String, String> bodys, List<String> signHeaderPrefixList, String appKey, String appSecret)
+    public static Response httpPost(String host, String path, int connectTimeout,
+                                    Map<String, String> headers, Map<String, String> querys,
+                                    Map<String, String> bodys, List<String> signHeaderPrefixList,
+                                    String appKey, String appSecret)
             throws Exception {
         if (headers == null) {
             headers = new HashMap<>();
@@ -114,6 +113,7 @@ public class HttpUtil {
 
     /**
      * Http POST 字符串
+     *
      * @param host
      * @param path
      * @param connectTimeout
@@ -126,12 +126,17 @@ public class HttpUtil {
      * @return
      * @throws Exception
      */
-    public static Response httpPost(String host, String path, int connectTimeout, Map<String, String> headers, Map<String, String> querys, String body, List<String> signHeaderPrefixList, String appKey, String appSecret)
+    public static Response httpPost(String host, String path, int connectTimeout,
+                                    Map<String, String> headers, Map<String, String> querys,
+                                    String body, List<String> signHeaderPrefixList,
+                                    String appKey, String appSecret)
             throws Exception {
-    	headers = initialBasicHeader(HttpMethod.POST, path, headers, querys, null, signHeaderPrefixList, appKey, appSecret);
+        headers = initialBasicHeader(HttpMethod.POST, path, headers, querys, null,
+                signHeaderPrefixList, appKey, appSecret);
 
-    	HttpClient httpClient = wrapClient(host);
-        httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, getTimeout(connectTimeout));
+        HttpClient httpClient = wrapClient(host);
+        httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,
+                getTimeout(connectTimeout));
 
         HttpPost post = new HttpPost(initUrl(host, path, querys));
         for (Map.Entry<String, String> e : headers.entrySet()) {
@@ -148,6 +153,7 @@ public class HttpUtil {
 
     /**
      * HTTP POST 字节数组
+     *
      * @param host
      * @param path
      * @param connectTimeout
@@ -160,12 +166,16 @@ public class HttpUtil {
      * @return
      * @throws Exception
      */
-    public static Response httpPost(String host, String path, int connectTimeout, Map<String, String> headers, Map<String, String> querys, byte[] bodys, List<String> signHeaderPrefixList, String appKey, String appSecret)
+    public static Response httpPost(String host, String path, int connectTimeout,
+                                    Map<String, String> headers, Map<String, String> querys, byte[] bodys,
+                                    List<String> signHeaderPrefixList, String appKey, String appSecret)
             throws Exception {
-    	headers = initialBasicHeader(HttpMethod.POST, path, headers, querys, null, signHeaderPrefixList, appKey, appSecret);
+        headers = initialBasicHeader(HttpMethod.POST, path, headers, querys, null,
+                signHeaderPrefixList, appKey, appSecret);
 
-    	HttpClient httpClient = wrapClient(host);
-        httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, getTimeout(connectTimeout));
+        HttpClient httpClient = wrapClient(host);
+        httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,
+                getTimeout(connectTimeout));
 
         HttpPost post = new HttpPost(initUrl(host, path, querys));
         for (Map.Entry<String, String> e : headers.entrySet()) {
@@ -181,6 +191,7 @@ public class HttpUtil {
 
     /**
      * HTTP PUT 字符串
+     *
      * @param host
      * @param path
      * @param connectTimeout
@@ -193,12 +204,17 @@ public class HttpUtil {
      * @return
      * @throws Exception
      */
-    public static Response httpPut(String host, String path, int connectTimeout, Map<String, String> headers, Map<String, String> querys, String body, List<String> signHeaderPrefixList, String appKey, String appSecret)
+    public static Response httpPut(String host, String path, int connectTimeout,
+                                   Map<String, String> headers, Map<String, String> querys,
+                                   String body, List<String> signHeaderPrefixList, String appKey,
+                                   String appSecret)
             throws Exception {
-    	headers = initialBasicHeader(HttpMethod.PUT, path, headers, querys, null, signHeaderPrefixList, appKey, appSecret);
+        headers = initialBasicHeader(HttpMethod.PUT, path, headers, querys, null,
+                signHeaderPrefixList, appKey, appSecret);
 
-    	HttpClient httpClient = wrapClient(host);
-        httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, getTimeout(connectTimeout));
+        HttpClient httpClient = wrapClient(host);
+        httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,
+                getTimeout(connectTimeout));
 
         HttpPut put = new HttpPut(initUrl(host, path, querys));
         for (Map.Entry<String, String> e : headers.entrySet()) {
@@ -215,6 +231,7 @@ public class HttpUtil {
 
     /**
      * HTTP PUT字节数组
+     *
      * @param host
      * @param path
      * @param connectTimeout
@@ -227,20 +244,25 @@ public class HttpUtil {
      * @return
      * @throws Exception
      */
-    public static Response httpPut(String host, String path, int connectTimeout, Map<String, String> headers, Map<String, String> querys, byte[] bodys, List<String> signHeaderPrefixList, String appKey, String appSecret)
+    public static Response httpPut(String host, String path, int connectTimeout,
+                                   Map<String, String> headers, Map<String, String> querys,
+                                   byte[] bodys, List<String> signHeaderPrefixList, String appKey,
+                                   String appSecret)
             throws Exception {
-    	headers = initialBasicHeader(HttpMethod.PUT, path, headers, querys, null, signHeaderPrefixList, appKey, appSecret);
+        headers = initialBasicHeader(HttpMethod.PUT, path, headers, querys, null,
+                signHeaderPrefixList, appKey, appSecret);
 
-    	HttpClient httpClient = wrapClient(host);
-        httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, getTimeout(connectTimeout));
+        HttpClient httpClient = wrapClient(host);
+        httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,
+                getTimeout(connectTimeout));
 
         HttpPut put = new HttpPut(initUrl(host, path, querys));
         for (Map.Entry<String, String> e : headers.entrySet()) {
-        	put.addHeader(e.getKey(), MessageDigestUtil.utf8ToIso88591(e.getValue()));
+            put.addHeader(e.getKey(), MessageDigestUtil.utf8ToIso88591(e.getValue()));
         }
 
         if (bodys != null) {
-        	put.setEntity(new ByteArrayEntity(bodys));
+            put.setEntity(new ByteArrayEntity(bodys));
         }
 
         return convert(httpClient.execute(put));
@@ -248,6 +270,7 @@ public class HttpUtil {
 
     /**
      * HTTP DELETE
+     *
      * @param host
      * @param path
      * @param connectTimeout
@@ -259,12 +282,16 @@ public class HttpUtil {
      * @return
      * @throws Exception
      */
-    public static Response httpDelete(String host, String path, int connectTimeout, Map<String, String> headers, Map<String, String> querys, List<String> signHeaderPrefixList, String appKey, String appSecret)
+    public static Response httpDelete(String host, String path, int connectTimeout,
+                                      Map<String, String> headers, Map<String, String> querys,
+                                      List<String> signHeaderPrefixList, String appKey, String appSecret)
             throws Exception {
-        headers = initialBasicHeader(HttpMethod.DELETE, path, headers, querys, null, signHeaderPrefixList, appKey, appSecret);
+        headers = initialBasicHeader(HttpMethod.DELETE, path, headers, querys, null,
+                signHeaderPrefixList, appKey, appSecret);
 
         HttpClient httpClient = wrapClient(host);
-        httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, getTimeout(connectTimeout));
+        httpClient.getParams().setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,
+                getTimeout(connectTimeout));
 
         HttpDelete delete = new HttpDelete(initUrl(host, path, querys));
         for (Map.Entry<String, String> e : headers.entrySet()) {
@@ -276,7 +303,7 @@ public class HttpUtil {
 
     /**
      * 构建FormEntity
-     * 
+     *
      * @param formParam
      * @return
      * @throws UnsupportedEncodingException
@@ -296,41 +323,43 @@ public class HttpUtil {
 
         return null;
     }
-    
-    private static String initUrl(String host, String path, Map<String, String> querys) throws UnsupportedEncodingException {
-    	StringBuilder sbUrl = new StringBuilder();
-    	sbUrl.append(host);
-    	if (!StringUtil.isBlank(path)) {
-    		sbUrl.append(path);
+
+    private static String initUrl(String host, String path, Map<String, String> querys)
+            throws UnsupportedEncodingException {
+        StringBuilder sbUrl = new StringBuilder();
+        sbUrl.append(host);
+        if (!StringUtil.isBlank(path)) {
+            sbUrl.append(path);
         }
-    	if (null != querys) {
-    		StringBuilder sbQuery = new StringBuilder();
-        	for (Map.Entry<String, String> query : querys.entrySet()) {
-        		if (0 < sbQuery.length()) {
-        			sbQuery.append(Constants.SPE3);
-        		}
-        		if (StringUtil.isBlank(query.getKey()) && !StringUtil.isBlank(query.getValue())) {
-        			sbQuery.append(query.getValue());
+        if (null != querys) {
+            StringBuilder sbQuery = new StringBuilder();
+            for (Map.Entry<String, String> query : querys.entrySet()) {
+                if (0 < sbQuery.length()) {
+                    sbQuery.append(Constants.SPE3);
                 }
-        		if (!StringUtil.isBlank(query.getKey())) {
-        			sbQuery.append(query.getKey());
-        			if (!StringUtil.isBlank(query.getValue())) {
-        				sbQuery.append(Constants.SPE4);
-        				sbQuery.append(URLEncoder.encode(query.getValue(), Constants.ENCODING));
-        			}        			
+                if (StringUtil.isBlank(query.getKey()) && !StringUtil.isBlank(query.getValue())) {
+                    sbQuery.append(query.getValue());
                 }
-        	}
-        	if (0 < sbQuery.length()) {
-        		sbUrl.append(Constants.SPE5).append(sbQuery);
-        	}
+                if (!StringUtil.isBlank(query.getKey())) {
+                    sbQuery.append(query.getKey());
+                    if (!StringUtil.isBlank(query.getValue())) {
+                        sbQuery.append(Constants.SPE4);
+                        sbQuery.append(URLEncoder.encode(query.getValue(), Constants.ENCODING));
+                    }
+                }
+            }
+            if (0 < sbQuery.length()) {
+                sbUrl.append(Constants.SPE5).append(sbQuery);
+            }
         }
-    	
-    	return sbUrl.toString();
+
+        return sbUrl.toString();
     }
-    	
+
 
     /**
      * 初始化基础Header
+     *
      * @param method
      * @param path
      * @param headers
@@ -343,7 +372,7 @@ public class HttpUtil {
      * @throws MalformedURLException
      */
     private static Map<String, String> initialBasicHeader(String method, String path,
-                                                          Map<String, String> headers, 
+                                                          Map<String, String> headers,
                                                           Map<String, String> querys,
                                                           Map<String, String> bodys,
                                                           List<String> signHeaderPrefixList,
@@ -364,7 +393,7 @@ public class HttpUtil {
 
     /**
      * 读取超时时间
-     * 
+     *
      * @param timeout
      * @return
      */
@@ -375,88 +404,61 @@ public class HttpUtil {
 
         return timeout;
     }
-    
+
     private static Response convert(HttpResponse response) throws IOException {
-    	Response res = new Response(); 
-    	
-    	if (null != response) {
-    		res.setStatusCode(response.getStatusLine().getStatusCode());
-    		for (Header header : response.getAllHeaders()) {
-    			res.setHeader(header.getName(), MessageDigestUtil.iso88591ToUtf8(header.getValue()));
+        Response res = new Response();
+
+        if (null != response) {
+            res.setStatusCode(response.getStatusLine().getStatusCode());
+            for (Header header : response.getAllHeaders()) {
+                res.setHeader(header.getName(), MessageDigestUtil.iso88591ToUtf8(header.getValue()));
             }
-    		
-    		res.setContentType(res.getHeader("Content-Type"));
-    		res.setRequestId(res.getHeader("X-Ca-Request-Id"));
-    		res.setErrorMessage(res.getHeader("X-Ca-Error-Message"));
-    		res.setBody(readStreamAsStr(response.getEntity().getContent()));
-    		
-    	} else {
-    		//服务器无回应
-    		res.setStatusCode(500);
-    		res.setErrorMessage("No Response");
-    	}
-    	
-    	return res;
+
+            res.setContentType(res.getHeader("Content-Type"));
+            res.setRequestId(res.getHeader("X-Ca-Request-Id"));
+            res.setErrorMessage(res.getHeader("X-Ca-Error-Message"));
+            res.setBody(readStreamAsStr(response.getEntity().getContent()));
+
+        } else {
+            //服务器无回应
+            res.setStatusCode(500);
+            res.setErrorMessage("No Response");
+        }
+
+        return res;
     }
 
 
-	/**
-	 * 将流转换为字符串
-	 *
-	 * @param is
-	 * @return
-	 * @throws IOException
-	 */
-	public static String readStreamAsStr(InputStream is) throws IOException {
-	    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-	    WritableByteChannel dest = Channels.newChannel(bos);
-	    ReadableByteChannel src = Channels.newChannel(is);
-	    ByteBuffer bb = ByteBuffer.allocate(4096);
-	
-	    while (src.read(bb) != -1) {
-	        bb.flip();
-	        dest.write(bb);
-	        bb.clear();
-	    }
-	    src.close();
-	    dest.close();
-	
-	    return new String(bos.toByteArray(), Constants.ENCODING);
-	}
+    /**
+     * 将流转换为字符串
+     *
+     * @param is
+     * @return
+     * @throws IOException
+     */
+    public static String readStreamAsStr(InputStream is) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        WritableByteChannel dest = Channels.newChannel(bos);
+        ReadableByteChannel src = Channels.newChannel(is);
+        ByteBuffer bb = ByteBuffer.allocate(4096);
 
-	private static HttpClient wrapClient(String host) {
-		HttpClient httpClient = new DefaultHttpClient();
-		if (host.startsWith("https://")) {
-			sslClient(httpClient);
-		}
-		
-		return httpClient;
-	}
-	
-	private static void sslClient(HttpClient httpClient) {
-        try {
-            SSLContext ctx = SSLContext.getInstance("TLS");
-            X509TrustManager tm = new X509TrustManager() {
-                public X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-                public void checkClientTrusted(X509Certificate[] xcs, String str) {
-                	
-                }
-                public void checkServerTrusted(X509Certificate[] xcs, String str) {
-                	
-                }
-            };
-            ctx.init(null, new TrustManager[] { tm }, null);
-            SSLSocketFactory ssf = new SSLSocketFactory(ctx);
-            ssf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-            ClientConnectionManager ccm = httpClient.getConnectionManager();
-            SchemeRegistry registry = ccm.getSchemeRegistry();
-            registry.register(new Scheme("https", 443, ssf));
-        } catch (KeyManagementException ex) {
-            throw new RuntimeException(ex);
-        } catch (NoSuchAlgorithmException ex) {
-        	throw new RuntimeException(ex);
+        while (src.read(bb) != -1) {
+            bb.flip();
+            dest.write(bb);
+            bb.clear();
         }
+        src.close();
+        dest.close();
+
+        return new String(bos.toByteArray(), Constants.ENCODING);
+    }
+
+    private static HttpClient wrapClient(String host) {
+        HttpClient httpClient = new DefaultHttpClient();
+        if (host.startsWith("https://")) {
+            HttpUtils.sslClient(httpClient);
+        }
+
+        return httpClient;
     }
 }
