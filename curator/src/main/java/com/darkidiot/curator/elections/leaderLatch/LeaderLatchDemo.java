@@ -50,9 +50,6 @@ public class LeaderLatchDemo {
         thread2.setName(id4client2);
         thread1.start();
         thread2.start();
-        // simulation clinet#1 crash.
-//        Thread.sleep(5000);
-
         thread1.join();
         thread2.join();
     }
