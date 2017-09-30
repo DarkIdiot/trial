@@ -17,7 +17,13 @@ public class Connection {
 
     public static CuratorFramework getConnection() {
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
-        CuratorFramework client = CuratorFrameworkFactory.newClient(Constant.getConnectInfo(), 5000, 5000, retryPolicy);
+        CuratorFramework client = CuratorFrameworkFactory.builder()
+                .connectString(Constant.getConnectInfo())
+                .retryPolicy(retryPolicy)
+                .sessionTimeoutMs(6000)
+                .connectionTimeoutMs(3000)
+                .namespace("demo")
+                .build();
         client.start();
         log.info("connect {} ok...", Constant.getConnectInfo());
         return client;
