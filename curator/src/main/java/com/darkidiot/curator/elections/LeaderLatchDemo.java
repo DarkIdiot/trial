@@ -1,4 +1,4 @@
-package com.darkidiot.curator.elections.leaderLatch;
+package com.darkidiot.curator.elections;
 
 import com.darkidiot.curator.common.Connection;
 import org.apache.curator.framework.CuratorFramework;
@@ -36,8 +36,8 @@ public class LeaderLatchDemo {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            CloseableUtils.closeQuietly(client);
             CloseableUtils.closeQuietly(leaderLatch);
+            CloseableUtils.closeQuietly(client);
         }
     }
 
