@@ -6,7 +6,7 @@ class FakeLimitedResource {
 
     private final AtomicBoolean inUse = new AtomicBoolean(false);
 
-    public void use() throws InterruptedException {
+    void simulationExclusiveResource() throws InterruptedException {
         // 真实环境中我们会在这里访问
         // 维护一个共享的资源
         //这个例子在使用锁的情况下不会非法并发异常IllegalStateException
@@ -20,5 +20,31 @@ class FakeLimitedResource {
             inUse.set(false);
         }
     }
+
+    public enum Operation {
+        Read, Write
+    }
+
+    void simulationDatabase(Operation operation) {
+        if (operation == Operation.Write) {
+            if (!inUse.compareAndSet(false, true)) {
+                throw new IllegalStateException("Needs to write by one client at a time");
+            }
+        }
+
+        if (operation == Operation.Read) {
+            //do nothing
+        }
+
+        try {
+            Thread.sleep((long) (3 * Math.random()));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            if (operation == Operation.Write)
+                inUse.set(false);
+        }
+    }
+
 }
 

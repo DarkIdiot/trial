@@ -46,7 +46,7 @@ public class SharedLockDemo {
 
     private static void doWork(String clientName, FakeLimitedResource resource) throws Exception {
         System.out.println(clientName + " get the lock");
-        resource.use(); //access resource exclusively
+        resource.simulationExclusiveResource(); //access resource exclusively
     }
 
 
