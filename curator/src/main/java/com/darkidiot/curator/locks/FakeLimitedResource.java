@@ -1,6 +1,7 @@
 package com.darkidiot.curator.locks;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 class FakeLimitedResource {
 
@@ -21,7 +22,23 @@ class FakeLimitedResource {
         }
     }
 
-    public enum Operation {
+
+    private final int countOfSemaphore = 10;
+    private final AtomicInteger mutex = new AtomicInteger(countOfSemaphore);
+
+    void simulationShareResource(int count) throws InterruptedException {
+        if (mutex.addAndGet(-count) < 0) {
+            mutex.getAndAdd(count);
+            throw new IllegalStateException("Needs to be used only by " + countOfSemaphore + " client at a time");
+        }
+        try {
+            Thread.sleep((long) (3 * Math.random()));
+        } finally {
+            mutex.getAndAdd(count);
+        }
+    }
+
+    enum Operation {
         Read, Write
     }
 
