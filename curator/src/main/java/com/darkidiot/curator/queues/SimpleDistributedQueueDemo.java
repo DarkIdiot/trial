@@ -9,7 +9,7 @@ import org.apache.curator.utils.CloseableUtils;
  * Copyright (c) for darkidiot
  * Date:2017/10/11
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
- * Desc:
+ * Desc: @see <a href="http://www.jianshu.com/p/70151fc0ef5d">source document</a>
  */
 public class SimpleDistributedQueueDemo {
     private static final String PATH = "/queue";

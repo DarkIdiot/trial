@@ -14,11 +14,11 @@ import java.util.concurrent.TimeUnit;
  * Copyright (c) for darkidiot
  * Date:2017/10/11
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
- * Desc:
+ * Desc: @see <a href="http://www.jianshu.com/p/70151fc0ef5d">source document</a>
  */
 public class DoubleBarrierDemo {
     private static final int QTY = 5;
-    private static final String PATH = "/examples/barrier";
+    private static final String PATH = "/barrier";
 
     public static void main(String[] args) throws Exception {
         CuratorFramework client = Connection.getConnection();
@@ -43,7 +43,6 @@ public class DoubleBarrierDemo {
 
             service.shutdown();
             service.awaitTermination(10, TimeUnit.MINUTES);
-            Thread.sleep(Integer.MAX_VALUE);
         } finally {
             CloseableUtils.closeQuietly(client);
         }

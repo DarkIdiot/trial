@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  * Copyright (c) for darkidiot
  * Date:2017/10/9
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
- * Desc:
+ * Desc: @see <a href="http://www.jianshu.com/p/70151fc0ef5d">source document</a>
  */
 public class SharedLockDemo {
 
