@@ -12,7 +12,7 @@ import org.apache.curator.utils.CloseableUtils;
  * Desc:
  */
 public class SimpleDistributedQueueDemo {
-    private static final String PATH = "/example/queue";
+    private static final String PATH = "/queue";
 
     public static void main(String[] args) throws Exception {
         CuratorFramework client = Connection.getConnection();
@@ -23,8 +23,10 @@ public class SimpleDistributedQueueDemo {
             Producer producer = new Producer(queue);
             Consumer consumer = new Consumer(queue);
             new Thread(producer, "producer").start();
-            new Thread(consumer, "consumer").start();
-            Thread.sleep(20000);
+            Thread consumerThread = new Thread(consumer, "consumer");
+            consumerThread.start();
+            Thread.sleep(20 * 1000);
+            consumerThread.interrupt();
         } finally {
             CloseableUtils.closeQuietly(client);
         }
@@ -66,9 +68,13 @@ public class SimpleDistributedQueueDemo {
         @Override
         public void run() {
             try {
-                System.out.println("consuming msg: " + new String(queue.take(), "UTF-8"));
+                while (!Thread.currentThread().isInterrupted()) {
+                    System.out.println("consuming msg: " + new String(queue.take(), "UTF-8"));
+                }
             } catch (Exception e) {
-                e.printStackTrace();
+                if (!(e instanceof InterruptedException)) {
+                    e.printStackTrace();
+                }
             }
         }
     }
