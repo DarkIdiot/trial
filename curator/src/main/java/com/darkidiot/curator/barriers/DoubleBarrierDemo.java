@@ -2,7 +2,7 @@ package com.darkidiot.curator.barriers;
 
 import com.darkidiot.curator.common.Connection;
 import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.recipes.barriers.DistributedBarrier;
+import org.apache.curator.framework.recipes.barriers.DistributedDoubleBarrier;
 import org.apache.curator.utils.CloseableUtils;
 
 import java.util.concurrent.Callable;
@@ -12,11 +12,11 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Copyright (c) for darkidiot
- * Date:2017/9/30
+ * Date:2017/10/11
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc:
  */
-public class BarrierDemo {
+public class DoubleBarrierDemo {
     private static final int QTY = 5;
     private static final String PATH = "/examples/barrier";
 
@@ -24,28 +24,26 @@ public class BarrierDemo {
         CuratorFramework client = Connection.getConnection();
         try {
             ExecutorService service = Executors.newFixedThreadPool(QTY);
-            DistributedBarrier controlBarrier = new DistributedBarrier(client, PATH);
-            controlBarrier.setBarrier();
-
             for (int i = 0; i < QTY; ++i) {
-                final DistributedBarrier barrier = new DistributedBarrier(client, PATH);
+                final DistributedDoubleBarrier barrier = new DistributedDoubleBarrier(client, PATH, QTY);
                 final int index = i;
                 Callable<Void> task = () -> {
+
                     Thread.sleep((long) (3 * Math.random()));
-                    System.out.println("Client #" + index + " waits on Barrier");
-                    barrier.waitOnBarrier();
+                    System.out.println("Client #" + index + " enters");
+                    barrier.enter();
                     System.out.println("Client #" + index + " begins");
+                    Thread.sleep((long) (3000 * Math.random()));
+                    barrier.leave();
+                    System.out.println("Client #" + index + " left");
                     return null;
                 };
                 service.submit(task);
             }
-            Thread.sleep(10000);
-            System.out.println("all Barrier instances should wait the condition");
-            controlBarrier.removeBarrier();
+
             service.shutdown();
             service.awaitTermination(10, TimeUnit.MINUTES);
-
-            Thread.sleep(20000);
+            Thread.sleep(Integer.MAX_VALUE);
         } finally {
             CloseableUtils.closeQuietly(client);
         }

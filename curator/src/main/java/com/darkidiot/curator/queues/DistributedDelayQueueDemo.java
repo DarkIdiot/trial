@@ -2,40 +2,43 @@ package com.darkidiot.curator.queues;
 
 import com.darkidiot.curator.common.Connection;
 import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.recipes.queue.DistributedIdQueue;
+import org.apache.curator.framework.recipes.queue.DistributedDelayQueue;
 import org.apache.curator.framework.recipes.queue.QueueBuilder;
 import org.apache.curator.framework.recipes.queue.QueueConsumer;
 import org.apache.curator.framework.recipes.queue.QueueSerializer;
 import org.apache.curator.framework.state.ConnectionState;
 import org.apache.curator.utils.CloseableUtils;
 
+import java.util.Date;
+
 /**
  * Copyright (c) for darkidiot
- * Date:2017/10/10
+ * Date:2017/10/11
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc:
  */
-public class DistributedIdQueueDemo {
+public class DistributedDelayQueueDemo {
+
     private static final String PATH = "/queue";
 
     public static void main(String[] args) throws Exception {
         CuratorFramework client = Connection.getConnection();
-        DistributedIdQueue<String> queue = null;
+        DistributedDelayQueue<String> queue = null;
         try {
             client.getCuratorListenable().addListener((client1, event) -> System.out.println("CuratorEvent: " + event.getType().name()));
 
             QueueConsumer<String> consumer = createQueueConsumer();
             QueueBuilder<String> builder = QueueBuilder.builder(client, consumer, createQueueSerializer(), PATH);
-            queue = builder.buildIdQueue();
+            queue = builder.buildDelayQueue();
             queue.start();
 
             for (int i = 0; i < 10; i++) {
-                queue.put(" test-" + i, "Id" + i);
-                Thread.sleep((long) (15 * Math.random()));
-                queue.remove("Id" + i);
+                queue.put("test-" + i, System.currentTimeMillis() + 10000);
             }
+            System.out.println(new Date().getTime() + ": already put all items");
 
-            Thread.sleep(10 * 1000);
+
+            Thread.sleep(20000);
 
         } finally {
             CloseableUtils.closeQuietly(queue);
@@ -60,6 +63,7 @@ public class DistributedIdQueueDemo {
     }
 
     private static QueueConsumer<String> createQueueConsumer() {
+
         return new QueueConsumer<String>() {
 
             @Override
@@ -69,10 +73,9 @@ public class DistributedIdQueueDemo {
 
             @Override
             public void consumeMessage(String message) throws Exception {
-                System.out.println("consume one message: " + message);
+                System.out.println(new Date().getTime() + ": consume one message: " + message);
             }
 
         };
     }
-
 }

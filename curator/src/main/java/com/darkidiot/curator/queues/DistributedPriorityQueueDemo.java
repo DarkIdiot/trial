@@ -2,7 +2,7 @@ package com.darkidiot.curator.queues;
 
 import com.darkidiot.curator.common.Connection;
 import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.recipes.queue.DistributedIdQueue;
+import org.apache.curator.framework.recipes.queue.DistributedPriorityQueue;
 import org.apache.curator.framework.recipes.queue.QueueBuilder;
 import org.apache.curator.framework.recipes.queue.QueueConsumer;
 import org.apache.curator.framework.recipes.queue.QueueSerializer;
@@ -15,24 +15,26 @@ import org.apache.curator.utils.CloseableUtils;
  * Author: <a href="darkidiot@icloud.com">darkidiot</a>
  * Desc:
  */
-public class DistributedIdQueueDemo {
+public class DistributedPriorityQueueDemo {
+
     private static final String PATH = "/queue";
 
     public static void main(String[] args) throws Exception {
         CuratorFramework client = Connection.getConnection();
-        DistributedIdQueue<String> queue = null;
+        DistributedPriorityQueue<String> queue = null;
         try {
             client.getCuratorListenable().addListener((client1, event) -> System.out.println("CuratorEvent: " + event.getType().name()));
 
             QueueConsumer<String> consumer = createQueueConsumer();
             QueueBuilder<String> builder = QueueBuilder.builder(client, consumer, createQueueSerializer(), PATH);
-            queue = builder.buildIdQueue();
+            queue = builder.buildPriorityQueue(0);
             queue.start();
 
             for (int i = 0; i < 10; i++) {
-                queue.put(" test-" + i, "Id" + i);
-                Thread.sleep((long) (15 * Math.random()));
-                queue.remove("Id" + i);
+                int priority = (int) (Math.random() * 100);
+                System.out.println("test-" + i + " priority:" + priority);
+                queue.put("test-" + i, priority);
+                Thread.sleep((long) (50 * Math.random()));
             }
 
             Thread.sleep(10 * 1000);
@@ -69,10 +71,9 @@ public class DistributedIdQueueDemo {
 
             @Override
             public void consumeMessage(String message) throws Exception {
+                Thread.sleep(1000);
                 System.out.println("consume one message: " + message);
             }
-
         };
     }
-
 }
