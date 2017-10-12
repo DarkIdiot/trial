@@ -16,10 +16,9 @@ public class SimpleDistributedQueueDemo {
 
     public static void main(String[] args) throws Exception {
         CuratorFramework client = Connection.getConnection();
-        SimpleDistributedQueue queue;
         try {
             client.getCuratorListenable().addListener((client1, event) -> System.out.println("CuratorEvent: " + event.getType().name()));
-            queue = new SimpleDistributedQueue(client, PATH);
+            SimpleDistributedQueue queue = new SimpleDistributedQueue(client, PATH);
             Producer producer = new Producer(queue);
             Consumer consumer = new Consumer(queue);
             new Thread(producer, "producer").start();
