@@ -22,7 +22,7 @@ public class Connection {
                 .retryPolicy(retryPolicy)
                 .sessionTimeoutMs(6000)
                 .connectionTimeoutMs(3000)
-                .namespace("demo")
+                .namespace("recipes")
                 .build();
         client.start();
         log.info("connect {} ok...", Constant.getConnectInfo());
