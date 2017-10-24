@@ -382,7 +382,7 @@ public class HttpUtil {
             headers = new HashMap<>();
         }
 
-        headers.put(SystemHeader.X_CA_TIMESTAMP, String.valueOf(new Date().getTime()));
+        headers.put(SystemHeader.X_CA_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
         //headers.put(SystemHeader.X_CA_NONCE, UUID.randomUUID().toString());
         headers.put(SystemHeader.X_CA_KEY, appKey);
         headers.put(SystemHeader.X_CA_SIGNATURE,

@@ -35,7 +35,7 @@ public class DistributedDelayQueueDemo {
             for (int i = 0; i < 10; i++) {
                 queue.put("test-" + i, System.currentTimeMillis() + 10000);
             }
-            System.out.println(new Date().getTime() + ": already put all items");
+            System.out.println(System.currentTimeMillis() + ": already put all items");
 
 
             Thread.sleep(20000);
@@ -73,7 +73,7 @@ public class DistributedDelayQueueDemo {
 
             @Override
             public void consumeMessage(String message) throws Exception {
-                System.out.println(new Date().getTime() + ": consume one message: " + message);
+                System.out.println(System.currentTimeMillis() + ": consume one message: " + message);
             }
 
         };
