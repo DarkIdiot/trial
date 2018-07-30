@@ -19,7 +19,7 @@ import java.util.Date;
  */
 public class DistributedDelayQueueDemo {
 
-    private static final String PATH = "/queue";
+    private static final String PATH = "/delayQueue";
 
     public static void main(String[] args) throws Exception {
         CuratorFramework client = Connection.getConnection();
